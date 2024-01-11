@@ -1,0 +1,22 @@
+.form {
+    display: flex;
+    flex-direction: row;
+    gap:20px;
+}
+
+.fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.checked {
+    text-decoration-line: line-through;
+}
