@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AdaTasks</title>
-    <link rel="stylesheet" href="./css/style.css">
-</head>
-<body>
-    <h1>AdaTasks</h1>
-    <form action="" class="form">
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>AdaTasks</h1>
+    </header>
+    <main class="main">
+      <form class="form">
+        <fieldset class="fieldset add">
+          <input
+            type="text"
+            class="input js-inputAdd"
+            placeholder="Nueva tarea"
+          />
+          <button class="js-btnAdd">Agregar</button>
+        </fieldset>
         <fieldset class="fieldset">
-            <input type="text" class="js-inputAdd">
-            <button class="js-btnAdd">Agregar</button>
+          <input type="text" placeholder="Ejemplo: gym" class="input" />
+          <button class="js-btnSearch">Buscar</button>
+          <ul class="js-list list"></ul>
         </fieldset>
-        <fieldset>
-            <input type="text" >
-            <button class="js-btnSearch">Buscar</button>
-            <p class="js-list list"></p>
-        </fieldset>
-    </form>
-    <script type="text/javascript "src="./js/main.js"></script>
-</body>
+      </form>
+    </main>
+    <script type="text/javascript " src="./js/main.js"></script>
+  </body>
 </html>
