@@ -6,35 +6,36 @@ const btnSearch = document.querySelector('.js-btnSearch');
 const btnAdd = document.querySelector('.js-btnAdd');
 const list = document.querySelector('.js-list');
 
-// const tasks = [
-//   { name: 'Recoger setas en el campo', completed: true },
-//   { name: 'Comprar pilas', completed: true },
-//   { name: 'Poner una lavadora de blancos', completed: true },
-//   {
-//     name: 'Aprender cómo se realizan las peticiones al servidor en JavaScript',
-//     completed: false,
-//   },
-// ];
-let tasks = [];
+const tasks = [
+  { name: 'Recoger setas en el campo', completed: true },
+  { name: 'Comprar pilas', completed: true },
+  { name: 'Poner una lavadora de blancos', completed: true },
+  {
+    name: 'Aprender cómo se realizan las peticiones al servidor en JavaScript',
+    completed: false,
+  },
+];
+//let tasks = [];
 function renderTask(array) {
   for (let i = 0; i < array.length; i++) {
     if (array[i].completed) {
-      list.innerHTML += `<li class="checked"><input type="checkbox" checked>${array[i].name}</li>`;
+      list.innerHTML += `<li class="tachado"><input type="checkbox" checked>${array[i].name}</li>`;
     } else {
       list.innerHTML += `<li><input type="checkbox">${array[i].name}</li>`;
     }
   }
 }
-function chargeData() {
-  fetch('https://dev.adalab.es/api/todo')
-    .then((response) => response.json())
-    .then((data) => {
-      for (const result of data.results) {
-        tasks = result;
-      }
-    });
-  renderTask(tasks);
-}
+renderTask(tasks);
+// function chargeData() {
+//   fetch('https://dev.adalab.es/api/todo')
+//     .then((response) => response.json())
+//     .then((data) => {
+//       for (const result of data.results) {
+//         tasks = result;
+//       }
+//     });
+//   renderTask(tasks);
+// }
 
 function handleSearch(event) {
   event.preventDefault();
@@ -56,10 +57,10 @@ function check(event) {
   const task = tasks.find((item) => item.name === taskCheckParent.textContent); //busca el primer elemento de tasks, cuya propiedad name coincida con el contenido de texto del elemento padre del checkbox
   // Verifica si el checkbox está marcado y actualiza la tarea correspondiente
   if (taskCheck.checked) {
-    taskCheckParent.classList.add('checked');
+    taskCheckParent.classList.add('tachado');
     task.completed = true;
   } else {
-    taskCheckParent.classList.remove('checked');
+    taskCheckParent.classList.remove('tachado');
     task.completed = false;
   }
 
