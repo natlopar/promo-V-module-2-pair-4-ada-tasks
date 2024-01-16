@@ -5,17 +5,39 @@ const inputSearch = document.querySelector('.js-inputSearch');
 const btnSearch = document.querySelector('.js-btnSearch');
 const btnAdd = document.querySelector('.js-btnAdd');
 const list = document.querySelector('.js-list');
+const msg = document.querySelector('.js-msg');
+const GITHUB_USER = 'mbueno992';
+const SERVER_URL = `https://dev.adalab.es/api/todo/${GITHUB_USER}`;
 
-const tasks = [
-  { name: 'Recoger setas en el campo', completed: true },
-  { name: 'Comprar pilas', completed: true },
-  { name: 'Poner una lavadora de blancos', completed: true },
-  {
-    name: 'Aprender cómo se realizan las peticiones al servidor en JavaScript',
-    completed: false,
-  },
-];
-//let tasks = [];
+
+
+// const tasks = [
+//   { name: 'Recoger setas en el campo', completed: true },
+//   { name: 'Comprar pilas', completed: true },
+//   { name: 'Poner una lavadora de blancos', completed: true },
+//   {
+//     name: 'Aprender cómo se realizan las peticiones al servidor en JavaScript',
+//     completed: false,
+//   },
+// ];
+let tasks = [];
+
+function renderMessage () {
+  let taskComplete = [];
+  let taskIncomplete = [];
+  for(const task of tasks) {
+    if (task.completed) {
+      taskComplete.push(task);
+      console.log(taskComplete);
+    } else {
+      taskIncomplete.push(task);
+      console.log(taskIncomplete);
+    }
+  msg.innerHTML = `Tienes ${tasks.length} tareas. ${taskComplete.length} completadas y ${taskIncomplete.length} por realizar.`;
+  }
+}
+
+
 function renderTask(array) {
   for (let i = 0; i < array.length; i++) {
     if (array[i].completed) {
@@ -25,17 +47,19 @@ function renderTask(array) {
     }
   }
 }
-renderTask(tasks);
-// function chargeData() {
-//   fetch('https://dev.adalab.es/api/todo')
-//     .then((response) => response.json())
-//     .then((data) => {
-//       for (const result of data.results) {
-//         tasks = result;
-//       }
-//     });
-//   renderTask(tasks);
-// }
+
+
+function chargeData() {
+  fetch('https://dev.adalab.es/api/todo')//fetch(SERVER_URL).then();
+    .then((response) => response.json())
+    .then((data) => {
+      tasks = data.results;
+      renderTask(tasks);
+      renderMessage();
+    });
+}
+
+chargeData();
 
 function handleSearch(event) {
   event.preventDefault();
@@ -50,6 +74,7 @@ function handleSearch(event) {
 }
 
 btnSearch.addEventListener('click', handleSearch);
+
 function check(event) {
   const taskCheck = event.target;
   const taskCheckParent = taskCheck.parentNode;
@@ -63,7 +88,38 @@ function check(event) {
     taskCheckParent.classList.remove('tachado');
     task.completed = false;
   }
-
-  console.log(tasks);
+  renderMessage();
+  
 }
 list.addEventListener('click', check);
+
+
+
+
+const addTask = (event) => {
+  event.preventDefault();
+  fetch(`https://dev.adalab.es/api/todo/`, {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify('nueva tarea'),//crear un objeto y enviar en este formato
+})
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    if (data.success) {
+      //Completa y/o modifica el código:
+      //Agrega la nueva tarea al listado
+      //Guarda el listado actualizado en el local storage
+      //Visualiza nuevamente el listado de tareas
+      //Limpia los valores de cada input
+    } else {
+      //muestra un mensaje de error.
+    }
+  });
+  
+
+}
+
+
+
+  btnAdd.addEventListener('click',addTask);
