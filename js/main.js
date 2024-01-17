@@ -6,10 +6,6 @@ const btnSearch = document.querySelector('.js-btnSearch');
 const btnAdd = document.querySelector('.js-btnAdd');
 const list = document.querySelector('.js-list');
 const msg = document.querySelector('.js-msg');
-const GITHUB_USER = 'mbueno992';
-const SERVER_URL = `https://dev.adalab.es/api/todo/${GITHUB_USER}`;
-
-
 
 // const tasks = [
 //   { name: 'Recoger setas en el campo', completed: true },
@@ -22,25 +18,35 @@ const SERVER_URL = `https://dev.adalab.es/api/todo/${GITHUB_USER}`;
 // ];
 let tasks = [];
 
-function renderMessage () {
+function renderMessage() {
   let taskComplete = [];
   let taskIncomplete = [];
-  for(const task of tasks) {
+  for (const task of tasks) {
     if (task.completed) {
       taskComplete.push(task);
-      console.log(taskComplete);
+      // console.log(taskComplete);
     } else {
       taskIncomplete.push(task);
-      console.log(taskIncomplete);
+      // console.log(taskIncomplete);
     }
-  msg.innerHTML = `Tienes ${tasks.length} tareas. ${taskComplete.length} completadas y ${taskIncomplete.length} por realizar.`;
+    msg.innerHTML = `Tienes ${tasks.length} tareas. ${taskComplete.length} completadas y ${taskIncomplete.length} por realizar.`;
   }
 }
 
-
 function renderTask(array) {
+  list.innerHTML = '';
   for (let i = 0; i < array.length; i++) {
+    const li = document.createElement('li');
+    const liTask = document.createTextNode(array[i].name);
+    list.appendChild(li);
+    const inputCheck = document.createElement('input');
+    inputCheck.setAttribute('type', 'checkbox');
+    inputCheck.setAttribute('value', array[i].name);
+    li.appendChild(inputCheck);
+
     if (array[i].completed) {
+      inputCheck.setAttribute('checked', '');
+
       list.innerHTML += `<li class="tachado"><input type="checkbox" checked>${array[i].name}</li>`;
     } else {
       list.innerHTML += `<li><input type="checkbox">${array[i].name}</li>`;
@@ -48,14 +54,30 @@ function renderTask(array) {
   }
 }
 
+const tasksLS = JSON.parse(localStorage.getItem('tasks'));
 
 function chargeData() {
-  fetch('https://dev.adalab.es/api/todo')//fetch(SERVER_URL).then();
+  fetch('https://dev.adalab.es/api/todo')
     .then((response) => response.json())
     .then((data) => {
       tasks = data.results;
-      renderTask(tasks);
-      renderMessage();
+      if (tasksLS !== null) {
+        renderTask(tasks);
+        addTask();
+        renderMessage();
+      } else {
+        fetch('https://dev.adalab.es/api/todo')
+          .then((response) => response.json())
+          .then((data) => {
+            tasks = data.results;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            renderTask(tasks);
+            renderMessage();
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     });
 }
 
@@ -89,37 +111,18 @@ function check(event) {
     task.completed = false;
   }
   renderMessage();
-  
 }
 list.addEventListener('click', check);
 
-
-
-
 const addTask = (event) => {
   event.preventDefault();
-  fetch(`https://dev.adalab.es/api/todo/`, {
-  method: 'POST',
-  headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify('nueva tarea'),//crear un objeto y enviar en este formato
-})
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-    if (data.success) {
-      //Completa y/o modifica el código:
-      //Agrega la nueva tarea al listado
-      //Guarda el listado actualizado en el local storage
-      //Visualiza nuevamente el listado de tareas
-      //Limpia los valores de cada input
-    } else {
-      //muestra un mensaje de error.
-    }
-  });
-  
+  const newTask = { name: '', completed: false };
+  let addTask = inputAdd.value;
+  newTask.name = addTask;
+  tasks.push(newTask);
+  console.log(tasks);
+  renderTask(tasks);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+};
 
-}
-
-
-
-  btnAdd.addEventListener('click',addTask);
+btnAdd.addEventListener('click', addTask);
