@@ -7,15 +7,6 @@ const btnAdd = document.querySelector('.js-btnAdd');
 const list = document.querySelector('.js-list');
 const msg = document.querySelector('.js-msg');
 
-// const tasks = [
-//   { name: 'Recoger setas en el campo', completed: true },
-//   { name: 'Comprar pilas', completed: true },
-//   { name: 'Poner una lavadora de blancos', completed: true },
-//   {
-//     name: 'Aprender cómo se realizan las peticiones al servidor en JavaScript',
-//     completed: false,
-//   },
-// ];
 let tasks = [];
 
 function renderMessage() {
@@ -24,10 +15,8 @@ function renderMessage() {
   for (const task of tasks) {
     if (task.completed) {
       taskComplete.push(task);
-      // console.log(taskComplete);
     } else {
       taskIncomplete.push(task);
-      // console.log(taskIncomplete);
     }
     msg.innerHTML = `Tienes ${tasks.length} tareas. ${taskComplete.length} completadas y ${taskIncomplete.length} por realizar.`;
   }
@@ -37,19 +26,18 @@ function renderTask(array) {
   list.innerHTML = '';
   for (let i = 0; i < array.length; i++) {
     const li = document.createElement('li');
-    const liTask = document.createTextNode(array[i].name);
     list.appendChild(li);
     const inputCheck = document.createElement('input');
+    const label = document.createElement('label');
+    li.appendChild(label);
+    const textInput= document.createTextNode(array[i].name);
+    label.appendChild(textInput);
     inputCheck.setAttribute('type', 'checkbox');
-    inputCheck.setAttribute('value', array[i].name);
-    li.appendChild(inputCheck);
+    label.appendChild(inputCheck);
 
     if (array[i].completed) {
       inputCheck.setAttribute('checked', '');
-
-      list.innerHTML += `<li class="tachado"><input type="checkbox" checked>${array[i].name}</li>`;
-    } else {
-      list.innerHTML += `<li><input type="checkbox">${array[i].name}</li>`;
+      label.setAttribute('class','tachado');
     }
   }
 }
@@ -63,7 +51,6 @@ function chargeData() {
       tasks = data.results;
       if (tasksLS !== null) {
         renderTask(tasks);
-        addTask();
         renderMessage();
       } else {
         fetch('https://dev.adalab.es/api/todo')
